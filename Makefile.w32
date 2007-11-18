@@ -1,0 +1,28 @@
+GTK_CFLAGS=-IC:/gtk/include/gtk-2.0 -IC:/gtk/lib/gtk-2.0/include -IC:/gtk/include/atk-1.0 -IC:/gtk/include/cairo -IC:/gtk/include/pango-1.0 -IC:/gtk/include/glib-2.0 -IC:/gtk/lib/glib-2.0/include  
+GTK_LDFLAGS=-libpath:C:/gtk/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gdk_pixbuf-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib fontconfig.lib freetype.lib zlib.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib glib-2.0.lib intl.lib iconv.lib
+
+all : sonydb.exe
+	@echo done.
+
+sonydb.exe : sonydb.obj frontend.obj sonydb.res
+	link /out:sonydb.exe sonydb.obj frontend.obj sonydb.res /libpath:id3lib id3lib.lib zlib.lib /nodefaultlib:libcmt
+
+sonydb.obj : sonydb.cpp sonydb.h
+	cl -c -GX sonydb.cpp
+
+frontend.obj : sonydb.h frontend.cpp
+	cl -DID3LIB_LINKOPTION=3 -Iid3lib/include -c -GX frontend.cpp
+
+sonydb.res : sonydb.rc
+	rc sonydb.rc
+
+gui : sonydb.obj images.h
+	cl -DID3LIB_LINKOPTION=3 -Iid3lib/include -DGUI $(GTK_CFLAGS) -c -GX frontend.cpp
+	link /out:sonydb.exe sonydb.obj frontend.obj sonydb.res /libpath:id3lib id3lib.lib zlib.lib $(GTK_LDFLAGS) /nodefaultlib:libcmt
+
+hoge :
+	cl -DID3LIB_LINKOPTION=3 -Iid3lib/include -DGUI $(GTK_CFLAGS) -GX hoge.c /link -libpath:C:/gtk/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gdk_pixbuf-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib fontconfig.lib freetype.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib glib-2.0.lib intl.lib iconv.lib
+
+clean :
+	-@del *.obj *.o *.exe *.res *.aps *.ncb *.opt *.plg
+	-@rm *.obj *.o *.exe *.res *.aps *.ncb *.opt *.plg

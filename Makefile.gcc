@@ -1,0 +1,22 @@
+ID3LIB_CFLAGS=-I/usr/include
+#ID3LIB_LDFLAGS=-Lid3lib -lid3 -lz
+ID3LIB_LDFLAGS=-lid3 -lz
+GTK_CFLAGS=`pkg-config --cflags gtk+-2.0`
+GTK_LDFLAGS=`pkg-config --libs gtk+-2.0`
+
+all : sonydb
+	@echo done.
+
+sonydb : sonydb.o frontend.o
+	gcc -g -o sonydb sonydb.o frontend.o -lstdc++ -lid3 -lz
+
+sonydb.o : sonydb.cpp sonydb.h
+	gcc -I. -g -c sonydb.cpp
+
+frontend.o : sonydb.h frontend.cpp
+	gcc -DID3LIB_LINKOPTION=1 -I. -g -c frontend.cpp
+
+gui : sonydb.o
+	gcc -g -DID3LIB_LINKOPTION=1 -DGUI $(ID3LIB_CFLAGS) $(GTK_CFLAGS) -c frontend.cpp
+	gcc -o sonydb sonydb.o frontend.o $(ID3LIB_LDFLAGS) $(GTK_LDFLAGS)
+
