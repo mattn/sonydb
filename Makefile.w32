@@ -8,10 +8,10 @@ sonydb.exe : sonydb.obj frontend.obj sonydb.res
 	link /out:sonydb.exe sonydb.obj frontend.obj sonydb.res /libpath:id3lib id3lib.lib zlib.lib /nodefaultlib:libcmt
 
 sonydb.obj : sonydb.cpp sonydb.h
-	cl -c -GX sonydb.cpp
+	cl -c -GX -MD sonydb.cpp
 
 frontend.obj : sonydb.h frontend.cpp
-	cl -DID3LIB_LINKOPTION=3 -Iid3lib/include -c -GX frontend.cpp
+	cl -DID3LIB_LINKOPTION=1 -Iid3lib/include -c -GX -MD frontend.cpp
 
 sonydb.res : sonydb.rc
 	rc sonydb.rc
