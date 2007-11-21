@@ -739,11 +739,13 @@ void gui(int argc, char* argv[])
     	{"text/uri-list", 0, 1}
 	};
 	gint n_drag_types = sizeof (drag_types) / sizeof (drag_types [0]);
+	bool detected = false;
 	SonyDb sonydb;
 
-	sonydb.detectPlayer();
-
 	gtk_init(&argc, &argv);
+
+	detected = sonydb.detectPlayer();
+
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "SonyDb");
 	g_signal_connect(G_OBJECT(window), "delete-event", gtk_main_quit, NULL);
@@ -831,7 +833,21 @@ void gui(int argc, char* argv[])
 	gtk_widget_queue_resize(window);
 	gtk_widget_show_all(window);
 
-	rebuild_tree(treeview, &sonydb, true);
+	if (detected) {
+		rebuild_tree(treeview, &sonydb, true);
+	} else {
+		GtkWidget* error;
+		error  = gtk_message_dialog_new(
+			GTK_WINDOW(window),
+			(GtkDialogFlags)(GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT),
+			GTK_MESSAGE_ERROR,
+			GTK_BUTTONS_OK,
+			"Can't detect devices!");
+		gtk_window_set_title(GTK_WINDOW(error), gtk_window_get_title(GTK_WINDOW(window)));
+		gint response = gtk_dialog_run(GTK_DIALOG(error));
+		gtk_widget_destroy(error);
+		return;
+	}
 
 	gtk_main();
 }

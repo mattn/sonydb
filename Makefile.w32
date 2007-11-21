@@ -17,7 +17,7 @@ sonydb.res : sonydb.rc
 	rc sonydb.rc
 
 gui : sonydb.obj images.h
-	cl -DID3LIB_LINKOPTION=3 -Iid3lib/include -DGUI $(GTK_CFLAGS) -c -GX frontend.cpp
+	cl -DID3LIB_LINKOPTION=1 -Iid3lib/include -DGUI $(GTK_CFLAGS) -c -GX -MD frontend.cpp
 	link /out:sonydb.exe sonydb.obj frontend.obj sonydb.res /libpath:id3lib id3lib.lib zlib.lib $(GTK_LDFLAGS) /nodefaultlib:libcmt
 
 hoge :
