@@ -1,0 +1,34 @@
+# -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+AC_INIT(frontend.cpp, 0.0.1, mattn.jp@gmail.com)
+AC_CONFIG_SRCDIR([frontend.cpp])
+AM_CONFIG_HEADER([config.h])
+AM_INIT_AUTOMAKE(sonydb, 0.0.1, no-define) 
+
+# Checks for programs.
+AC_PROG_CXX
+
+# Checks for libraries.
+dnl id3lib
+AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,
+AC_MSG_ERROR(id3lib not found.))
+
+# Checks for header files.
+AC_CHECK_HEADERS([memory.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_MEMCMP
+AC_HEADER_STDC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([memset putenv setlocale strdup strpbrk])
+
+# Checks for library functions.
+AC_OUTPUT([Makefile sonydb.spec])
+

@@ -1,0 +1,44 @@
+Name:           sonydb
+Version:        @PACKAGE_VERSION@
+Release:        1%{?dist}
+Summary:        music transfer for sony network walkman.
+Group:          Applications/Music
+License:        GPL
+URL:            http://mattn.kaoriya.net
+Source0:        %{name}-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  libid3-dev >= 3.8.0
+
+%description
+music transfer for sony network walkman.
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+aclocal
+automake -a
+autoheader 
+autoconf
+chmod +x configure
+%configure
+make %{?_smp_mflags}
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+
+%postun
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/%{name}
+
+%changelog
+* Fri Jul 04 2008 Yasuhiro Matsumoto <mattn.jp at gmail.com>
+- Initial RPM release.
