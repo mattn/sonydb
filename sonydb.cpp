@@ -2657,6 +2657,7 @@ bool SonyDb::detectPlayer()
 	char* detect_letter[] = {
 		"/media/usbdisk",
 		"/media/usbdisk1",
+		"/media/WALKMAN",
 		NULL
 	};
 	char** ptr = detect_letter;
