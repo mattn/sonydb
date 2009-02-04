@@ -4,6 +4,7 @@
 #include <gdk/gdkkeysyms.h>
 #include "images.h"
 #endif
+#include <string.h>
 #include <id3.h>
 #include "sonydb.h"
 
