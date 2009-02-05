@@ -25,7 +25,7 @@ COL_MAX
 #define EDIT_TYPE_TITLE 3
 #endif
 
-static char* get_genre(const char* src)
+static const char* get_genre(const char* src)
 {
 	const char* ptr = src;
 	while(*ptr && !isdigit(*ptr)) ptr++;
