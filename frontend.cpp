@@ -178,12 +178,12 @@ static void print_song(Song* song)
 
 static void deleteSongPtr(Song *song)
 {
-     free(song->album);
-     free(song->artist);
-     free(song->title);
-     free(song->genre);
-     free(song->filename);
-     free(song);
+	free(song->album);
+	free(song->artist);
+	free(song->title);
+	free(song->genre);
+	free(song->filename);
+	free(song);
 }
 
 std::string wstring2string(const wchar_t* str)
@@ -737,10 +737,10 @@ void gui(int argc, char* argv[])
 	GtkWidget* hbox;
 	GtkTargetList* targetlist;
 	GtkTargetEntry drag_types[] = {
-    	{"text/uri-list", 0, 1}
+		{"text/uri-list", 0, 1}
 	};
 	gint n_drag_types = sizeof (drag_types) / sizeof (drag_types [0]);
-	bool detected = false;
+	bool detected = true;
 	SonyDb sonydb;
 
 	gtk_init(&argc, &argv);
@@ -749,10 +749,12 @@ void gui(int argc, char* argv[])
 	if (playerPath != NULL) {
 		if (!sonydb.detectPlayer(playerPath)) {
 			argc = 0;
+			detected = false;
 		}
 	} else {
 		if (!sonydb.detectPlayer()) {
 			argc = 0;
+			detected = false;
 		}
 	}
 
@@ -787,17 +789,17 @@ void gui(int argc, char* argv[])
 	column = gtk_tree_view_column_new();
 
 	// artist
-    renderer = gtk_cell_renderer_pixbuf_new();
+	renderer = gtk_cell_renderer_pixbuf_new();
 	g_object_set(renderer, "xalign", 0.0, NULL);
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", COL_ICON);
-    renderer = gtk_cell_renderer_text_new();
+	renderer = gtk_cell_renderer_text_new();
 	g_object_set(renderer, "xalign", 0.0, NULL);
 	g_object_set(renderer, "weight", PANGO_WEIGHT_BOLD, NULL);
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute(column, renderer, "text", COL_TEXT);
 
-    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
 	swin = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(
