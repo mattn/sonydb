@@ -8,7 +8,7 @@ all : sonydb
 	@echo done.
 
 sonydb : sonydb.o frontend.o
-	gcc -g -o sonydb sonydb.o frontend.o -lstdc++ -lid3 -lz
+	gcc -g -o sonydb sonydb.o frontend.o -lid3 -lstdc++ -lz
 
 sonydb.o : sonydb.cpp sonydb.h
 	gcc -I. -g -c sonydb.cpp
