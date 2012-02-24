@@ -1,6 +1,6 @@
 ID3LIB_CFLAGS=-I/usr/include
 #ID3LIB_LDFLAGS=-Lid3lib -lid3 -lz
-ID3LIB_LDFLAGS=-lid3 -lz
+ID3LIB_LDFLAGS=-lid3 -liconv -lz
 GTK_CFLAGS=`pkg-config --cflags gtk+-2.0`
 GTK_LDFLAGS=`pkg-config --libs gtk+-2.0`
 
@@ -8,17 +8,17 @@ all : sonydb.exe
 	@echo done.
 
 sonydb.exe : sonydb.o frontend.o sonydb.res
-	gcc -g -o sonydb.exe sonydb.o frontend.o sonydb.res -lid3 -lstdc++ -lz
+	g++ -g -o sonydb.exe sonydb.o frontend.o sonydb.res $(ID3LIB_LDFLAGS)
 
 sonydb.o : sonydb.cpp sonydb.h
-	gcc -I. -g -c sonydb.cpp
+	g++ -I. -g -c sonydb.cpp
 
 frontend.o : sonydb.h frontend.cpp
-	gcc -DID3LIB_LINKOPTION=1 -I. -g -c frontend.cpp
+	g++ -DID3LIB_LINKOPTION=1 -I. -g -c frontend.cpp
 
 gui : sonydb.o
-	gcc -g -DID3LIB_LINKOPTION=1 -DGUI $(ID3LIB_CFLAGS) $(GTK_CFLAGS) -c frontend.cpp
-	gcc -o sonydb sonydb.o frontend.o $(ID3LIB_LDFLAGS) $(GTK_LDFLAGS)
+	g++ -g -DID3LIB_LINKOPTION=1 -DGUI $(ID3LIB_CFLAGS) $(GTK_CFLAGS) -c frontend.cpp
+	g++ -o sonydb sonydb.o frontend.o $(ID3LIB_LDFLAGS) $(GTK_LDFLAGS)
 
 sonydb.res : sonydb.rc
 	windres -O coff sonydb.rc sonydb.res
