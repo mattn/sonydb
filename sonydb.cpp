@@ -133,8 +133,10 @@ void SonyDb::freeAllPlaylist()
 				free((*i)->album);
 				free((*i)->genre);
 				free((*i)->title);
+				delete (*i);
 			}
 		}
+		if ((*pl).name) free((*pl).name);
 	}
 	while (playlist.size() > 0)
 		playlist.pop_back();
@@ -1918,7 +1920,7 @@ bool SonyDb::writeDatabase(vector<Song *> songsToSend)
 		{
 			//add the playlist
 			Song *s = new Song();
-			s->album = (*pl).name;
+			s->album = strdup((*pl).name);
 			s->artist = strdup(" ");
 			s->genre = strdup(" ");
 			s->title = strdup(" ");
@@ -2110,10 +2112,10 @@ int  SonyDb::readAllPlaylist()
 	int plIndex = 1;
 	for (vector<Song *>::iterator song = listOfPlaylist.begin(); song != listOfPlaylist.end(); song++)
 	{
-		Playlist *p = new Playlist();
-		p->name = strdup((*song)->title);
-		p->index = plIndex++;
-		addPlaylist(p);
+		Playlist p;
+		p.name = strdup((*song)->title);
+		p.index = plIndex++;
+		addPlaylist(&p);
 	}
 
 	//sort the playlist by index
@@ -2224,7 +2226,21 @@ int  SonyDb::readAllPlaylist()
 		for (vector<Song>::iterator so = songs.begin(); so != songs.end(); so++)
 		{
 			if ((*so).sonyDbOrder == cte1)
-				(*pla).songs.push_back(&(*so));
+			{
+				//copy the song: pointers into 'songs' would dangle once it is resized
+				Song *newSong = new Song();
+				newSong->album = strdup((*so).album);
+				newSong->artist = strdup((*so).artist);
+				newSong->title = strdup((*so).title);
+				newSong->filename = strdup((*so).filename);
+				newSong->genre = strdup((*so).genre);
+				newSong->songlen = (*so).songlen;
+				newSong->track_nr = (*so).track_nr;
+				newSong->year = (*so).year;
+				newSong->sonyDbOrder = (*so).sonyDbOrder;
+				newSong->statusOfSong = MODIFIED;
+				(*pla).songs.push_back(newSong);
+			}
 		}
 	}  
 	fclose(f);
