@@ -913,7 +913,7 @@ bool SonyDb::addOMA(Song *s, int destination)
 	//title tag
 	memset(header, 0, 11);
 	memcpy(header, "TIT2", 4);
-	tagLength = strlen(s->title);
+	tagLength = s->title ? strlen(s->title) : 0;
 	tagRecord = ansi_to_utf16(s->title, tagLength + 1, true);
 	tagLength = (tagLength * 2) + 1;
 	header[4] = NOT_SYNCHSAFE_B1(tagLength);//size of the title
@@ -944,7 +944,7 @@ bool SonyDb::addOMA(Song *s, int destination)
 	//artist tag
 	memset(header, 0, 11);
 	memcpy(header, "TPE1", 4);
-	tagLength = strlen(s->artist);
+	tagLength = s->artist ? strlen(s->artist) : 0;
 	tagRecord = ansi_to_utf16(s->artist, tagLength + 1, true);
 	tagLength = (tagLength * 2) + 1;
 	header[4] = NOT_SYNCHSAFE_B1(tagLength);//size of the title
@@ -974,7 +974,7 @@ bool SonyDb::addOMA(Song *s, int destination)
 	//album tag
 	memset(header, 0, 11);
 	memcpy(header, "TALB", 4);
-	tagLength = strlen(s->album);
+	tagLength = s->album ? strlen(s->album) : 0;
 	tagRecord = ansi_to_utf16(s->album, tagLength + 1, true);
 	tagLength = (tagLength * 2) + 1;
 	header[4] = NOT_SYNCHSAFE_B1(tagLength);//size of the title
@@ -1004,7 +1004,7 @@ bool SonyDb::addOMA(Song *s, int destination)
 	//genre tag
 	memset(header, 0, 11);
 	memcpy(header, "TCON", 4);
-	tagLength = strlen(s->genre);
+	tagLength = s->genre ? strlen(s->genre) : 0;
 	tagRecord = ansi_to_utf16(s->genre, tagLength + 1, true);
 	tagLength = (tagLength * 2) + 1;
 	header[4] = NOT_SYNCHSAFE_B1(tagLength);//size of the title
