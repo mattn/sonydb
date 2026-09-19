@@ -3463,7 +3463,7 @@ bool SonyDb::write_03GINFXX(vector<Song *> list, int type)
 				return (false);
 
 			//picp tag
-			memcpy( tt.tagType, "", 4 );
+			memcpy( tt.tagType, "PICP", 4 );
 			if (!(writeTrackTag(&tt, "", f)))
 				return (false);
 
