@@ -261,7 +261,10 @@ void rebuild_tree(GtkWidget* widget, SonyDb* sonydb, bool reload)
 	vector<Song*> songs;
 	vector<Song*>::iterator itsongs;
 
-	if (reload) sonydb->readAllTracks();
+	if (reload) {
+		sonydb->readAllTracks();
+		sonydb->readAllPlaylist();
+	}
 	songs = sonydb->getSongs();
 
 	store = (GtkTreeStore*)gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
@@ -928,6 +931,7 @@ int main(int argc, char* argv[])
 		vector<Song*> songs;
 		vector<Song*>::iterator itsongs;
 		sonydb.readAllTracks();
+		sonydb.readAllPlaylist();
 		songs = sonydb.getSongs();
 		for(itsongs = songs.begin(); itsongs != songs.end(); itsongs++) {
 			if ((*itsongs)->sonyDbOrder == atol(argv[2]))
@@ -940,6 +944,7 @@ int main(int argc, char* argv[])
 	if (argc >= 3 && !strcmp(argv[1], "songsadd")) {
 		vector<Song*> songs;
 		sonydb.readAllTracks();
+		sonydb.readAllPlaylist();
 		songs = sonydb.getSongs();
 
 		ID3Tag* tag;
