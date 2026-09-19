@@ -2984,7 +2984,9 @@ bool SonyDb::write_01TREEXX(vector<Song *> songs, vector<Song *> list, int type)
 	//TPLB object pointer
 	memcpy( Opointer.magic, "TPLB", 4 );
 	Opointer.offset = UINT32_SWAP_BE_LE(0X4040);
-	Opointer.length = UINT32_SWAP_BE_LE(16 + (nbSongs * 2)  + (16 - (nbSongs * 2 ) % 16)); //TPLB are 2 byte long + 16 of TPLB header
+	int TPLBlength = 16 + (nbSongs * 2); //TPLB are 2 byte long + 16 of TPLB header
+	if (nbSongs % 8) TPLBlength += (16 - (nbSongs * 2) % 16); //padded to 16 bytes
+	Opointer.length = UINT32_SWAP_BE_LE(TPLBlength);
 	writeObjectPointer(&Opointer, f);
 
 	//write the GPLB object header
