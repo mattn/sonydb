@@ -2006,7 +2006,7 @@ int SonyDb::getTrackNumber(char *filename)
 		//fprintf(fp, "Reading tag %i: ", i);fflush(fp);
 		if (fread(&tmpTag, sizeof(uint8), 11, fin) != 11)
 		{
-			fprintf(fp, "error can't read file tag %i : %s\n", filename, i);
+			fprintf(fp, "error can't read file tag %i : %s\n", i, filename);
 			fflush(fp);
 			fclose(fin);
 			return (-1);
@@ -2028,6 +2028,13 @@ int SonyDb::getTrackNumber(char *filename)
 
 			if ((STRNCMP_NULLOK((char*)tmpTag, "TXXX", 4) == 0))
 			{
+				if (tagLength >= sizeof(tmpTag))
+				{
+					fprintf(fp, "Tag too long: %s\n", filename);
+					fflush(fp);
+					fclose(fin);
+					return (-1);
+				}
 				memset(tmpTag, 0, 512);
 				if (fread(&tmpTag, sizeof(uint8), tagLength, fin) != tagLength)
 				{
