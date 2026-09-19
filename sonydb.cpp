@@ -849,7 +849,11 @@ bool SonyDb::addOMA(Song *s, int destination)
 
 				int samplingRate = SAMPLING_RATES[(mpegVersion * 3) + samplingRateIndex];
 				int samplePerFrame = SAMPLE_PER_FRAME[(mpegVersion * 4) + layerVersion];
-				nbFrames = (s->songlen * samplingRate) / samplePerFrame;
+				//reserved layer/version gives 0 samples per frame
+				if (samplePerFrame == 0)
+					nbFrames = 0;
+				else
+					nbFrames = (s->songlen * samplingRate) / samplePerFrame;
 			}
 
 			//skip the the frame header
