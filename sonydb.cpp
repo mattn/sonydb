@@ -355,57 +355,46 @@ int SonyDb::getNbTrackToAdd()
 	return (this->nbTrackToAdd);
 }
 
+//songs not yet on the device all have sonyDbOrder 0, so match them by source file
+static bool isSameSong(Song *a, Song *b)
+{
+	if (a->sonyDbOrder != b->sonyDbOrder)
+		return (false);
+	if (a->sonyDbOrder == 0)
+		return (STRCMP2_NULLOK(a->filename, b->filename) == 0);
+	return (true);
+}
+
 bool SonyDb::updSong(Song *songToUpd)
 {
-	if (this->copying)
-	{
-		for (vector<Song>::iterator song = songs_temporary.begin(); song != songs_temporary.end(); song++)
-		{
-			//song is the same
-			if (song->sonyDbOrder == songToUpd->sonyDbOrder)
-			{
-				if (song->statusOfSong != REMOVE_FROM_DEVICE &&
-					song->statusOfSong != EMPTYTRACK)
-				{
-					song->artist = strdup(songToUpd->artist);
-					song->album = strdup(songToUpd->album);
-					song->genre = strdup(songToUpd->genre);
-					song->title = strdup(songToUpd->title);
+	vector<Song> &list = this->copying ? songs_temporary : songs;
 
-					song->track_nr = songToUpd->track_nr;
-					song->songlen = songToUpd->songlen;
-					song->year = songToUpd->year;
-					return (true);
-				}
-				return (false);
+	for (vector<Song>::iterator song = list.begin(); song != list.end(); song++)
+	{
+		//song is the same
+		if (isSameSong(&(*song), songToUpd))
+		{
+			if (song->statusOfSong != REMOVE_FROM_DEVICE &&
+				song->statusOfSong != EMPTYTRACK)
+			{
+				if (song->artist) free(song->artist);
+				if (song->album) free(song->album);
+				if (song->genre) free(song->genre);
+				if (song->title) free(song->title);
+				song->artist = strdup(songToUpd->artist);
+				song->album = strdup(songToUpd->album);
+				song->genre = strdup(songToUpd->genre);
+				song->title = strdup(songToUpd->title);
+
+				song->track_nr = songToUpd->track_nr;
+				song->songlen = songToUpd->songlen;
+				song->year = songToUpd->year;
+				return (true);
 			}
+			return (false);
 		}
 	}
-	else
-	{
-		for (vector<Song>::iterator song = songs.begin(); song != songs.end(); song++)
-		{
-			//song is the same
-			if (song->sonyDbOrder == songToUpd->sonyDbOrder)
-			{
-				if (song->statusOfSong != REMOVE_FROM_DEVICE &&
-					song->statusOfSong != EMPTYTRACK)
-				{
-					song->artist = strdup(songToUpd->artist);
-					song->album = strdup(songToUpd->album);
-					song->genre = strdup(songToUpd->genre);
-					song->title = strdup(songToUpd->title);
-
-					song->track_nr = songToUpd->track_nr;
-					song->songlen = songToUpd->songlen;
-					song->year = songToUpd->year;
-					return (true);
-				}
-				return (false);
-			}
-		}
-	}
-	return (0);
+	return (false);
 }
 
 int SonyDb::delSong(Song *songToDel)
