@@ -2429,7 +2429,11 @@ bool SonyDb::getTrack(FILE *f, Song *output)
 	//read the tags from the 04CNTINF.DAT file
 	char tagType[4];
 	char encoding[2];
-	utf16char *tagRecord = (utf16char*) malloc(sizeof(utf16char) * t.sizeTagRecords);
+	if (t.sizeTagRecords < 6)
+		return false;
+	//record data is (sizeTagRecords - 6) bytes of utf16, zero filled so the tag is always terminated
+	int tagChars = (t.sizeTagRecords - 6) / 2;
+	utf16char *tagRecord = (utf16char*) calloc(sizeof(utf16char), tagChars + 1);
 
 	for (int i = 1; i <= t.nbTagRecords; i++)
 	{  
@@ -2451,7 +2455,7 @@ bool SonyDb::getTrack(FILE *f, Song *output)
 			output->wTitle = tagRecord;
 
 			//ansi version
-			output->title = utf16_to_ansi((utf16char*)tagRecord, t.sizeTagRecords, true);
+			output->title = utf16_to_ansi((utf16char*)tagRecord, tagChars, true);
 			//fprintf(fp, "Read title : %s\n", output->title);fflush(fp);
 			continue;
 		}
@@ -2462,7 +2466,7 @@ bool SonyDb::getTrack(FILE *f, Song *output)
 			output->wArtist = tagRecord;
 
 			//ansi version
-			output->artist = utf16_to_ansi((utf16char*)tagRecord, t.sizeTagRecords, true);
+			output->artist = utf16_to_ansi((utf16char*)tagRecord, tagChars, true);
 			continue;
 		}
 
@@ -2472,7 +2476,7 @@ bool SonyDb::getTrack(FILE *f, Song *output)
 			output->wAlbum = tagRecord;
 
 			//ansi version
-			output->album = utf16_to_ansi((utf16char*)tagRecord, t.sizeTagRecords, true);
+			output->album = utf16_to_ansi((utf16char*)tagRecord, tagChars, true);
 			continue;
 		}
 
@@ -2482,7 +2486,7 @@ bool SonyDb::getTrack(FILE *f, Song *output)
 			output->wGenre = tagRecord;
 
 			//ansi version
-			output->genre = utf16_to_ansi((utf16char*)tagRecord, t.sizeTagRecords, true);
+			output->genre = utf16_to_ansi((utf16char*)tagRecord, tagChars, true);
 			continue;
 		}
 	}
