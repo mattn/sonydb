@@ -2339,9 +2339,9 @@ int SonyDb::readAllTracks()
 				}
 
 				if (!(s->album)) s->album = strdup("");
-				if (!(s->artist)) s->album = strdup("");
-				if (!(s->genre)) s->album = strdup("");
-				if (!(s->title)) s->album = strdup("");
+				if (!(s->artist)) s->artist = strdup("");
+				if (!(s->genre)) s->genre = strdup("");
+				if (!(s->title)) s->title = strdup("");
 
 				if ((STRCMP2_NULLOK(s->album, "") == 0) && 
 						(STRCMP2_NULLOK(s->artist, "") == 0) &&
