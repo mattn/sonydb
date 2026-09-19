@@ -3744,12 +3744,12 @@ utf16char *ansi_to_utf16(const char  *str, long len, bool endian)
 	if(!str) return dest; //Return an empty buffer of the size needed
 
 	wchar_t *wdest=(wchar_t*)malloc(sizeof(wchar_t) * (len+1));
-	memset(wdest, 0, sizeof(wchar_t)*len);
+	memset(wdest, 0, sizeof(wchar_t)*(len+1));
 
 #ifdef _WIN32
-	int num = MultiByteToWideChar(CP_ACP,0,str,-1,(WCHAR*)wdest,strlen(str)+1);
+	int num = MultiByteToWideChar(CP_ACP,0,str,-1,(WCHAR*)wdest,len);
 #else
-	mbstowcs(wdest, str, 2048);
+	mbstowcs(wdest, str, len);
 #endif
 
 	for (j = 0; j < len; j++)
