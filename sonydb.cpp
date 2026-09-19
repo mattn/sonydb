@@ -1073,7 +1073,6 @@ bool SonyDb::addOMA(Song *s, int destination)
 	tagLength = strlen(tmpTag);
 	tagRecord = ansi_to_utf16(tmpTag, tagLength + 1, true);
 	tagLength = (tagLength * 2) + 1;
-	tagLength = (strlen(tmpTag) + 1) * 2;
 	header[4] = NOT_SYNCHSAFE_B1(tagLength);//size of the title
 	header[5] = NOT_SYNCHSAFE_B2(tagLength);
 	header[6] = NOT_SYNCHSAFE_B3(tagLength);
