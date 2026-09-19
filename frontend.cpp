@@ -225,8 +225,8 @@ wstring string2wstring(const char* str)
 	delete [] pszStr;
 #else
 	if (str) {
-		size_t wcssize = strlen(str)*sizeof(wchar_t);
-		wchar_t* dest = (wchar_t*)malloc(wcssize+1);
+		size_t wcssize = strlen(str) + 1;
+		wchar_t* dest = (wchar_t*)malloc(wcssize * sizeof(wchar_t));
 		if (dest) {
 			mbstowcs(dest, str, wcssize);
 			ret = dest;
@@ -952,6 +952,12 @@ int main(int argc, char* argv[])
 		int track_nr = 0;
 		int n;
 		for(n = 2; n < argc; n++) {
+			if (argv[n][0] != '-')
+				break;
+			if (n + 1 >= argc) {
+				fprintf(stderr, "%s: missing value\n", argv[n]);
+				return 1;
+			}
 			if (!strcmp(argv[n], "-title"))
 				title = argv[++n];
 			else
@@ -1163,7 +1169,7 @@ int main(int argc, char* argv[])
 		for(itsongs = songs.begin(); itsongs != songs.end(); itsongs++) {
 			struct stat statbuf = {0};
 			if (stat((*itsongs)->filename, &statbuf) == -1) {
-				printf("deleted link of ", (*itsongs)->filename);
+				printf("deleted link of %s\n", (*itsongs)->filename);
 				sonydb.delSong(*itsongs);
 			}
 			deleteSongPtr(*itsongs);
