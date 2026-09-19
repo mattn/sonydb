@@ -1955,7 +1955,7 @@ bool SonyDb::writeDatabase(vector<Song *> songsToSend)
 		free(s->genre);
 		free(s->title);
 		free(s->filename);
-		free(s);
+		delete s;
 	}
 
 	songsInPlaylist.clear();
@@ -2106,6 +2106,8 @@ int  SonyDb::readAllPlaylist()
 
 		if (getTrack(f, s) )
 			listOfPlaylist.push_back(s);
+		else
+			delete s;
 	}
 	fclose(f);
 
@@ -2125,7 +2127,7 @@ int  SonyDb::readAllPlaylist()
 	{
 		s = listOfPlaylist.back();
 		if (s->title) free(s->title);
-		free(s);
+		delete s;
 		listOfPlaylist.pop_back();
 	}
 
@@ -2390,8 +2392,9 @@ int SonyDb::readAllTracks()
 				}
 				s->sonyDbOrder = index;
 				lastTrackIndex++;
-				songs.push_back(*s);
+				songs.push_back(*s); //the vector owns the strings from now on
 			}
+			delete s;
 		}
 		fclose(f);
 		if (trackNumberAvailable)
